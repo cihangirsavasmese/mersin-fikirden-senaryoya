@@ -44,7 +44,30 @@ body.idle{cursor:none}
 #stage[data-mode=content] #bant{opacity:1;transform:none;transition-delay:.25s}
 #progress{position:absolute;left:0;bottom:0;height:5px;background:var(--grad);transition:width .9s var(--ease);z-index:20}
 #bolum{position:absolute;left:160px;bottom:40px;font-size:20px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);z-index:6;transition:opacity .6s}
-#stage[data-mode=cover] #bolum{opacity:0}
+#bolum b{color:var(--sari);font-weight:800}
+#stage[data-mode=cover] #bolum,#stage[data-mode=bolum] #bolum{opacity:0}
+/* Bölüm ilerleme çizgisi: üstte üç parça; geçilen bölümler dolu, bulunulan bölüm slayt ilerledikçe dolar */
+#ilerleme{position:absolute;left:160px;right:160px;top:0;height:6px;display:flex;gap:10px;z-index:6;transition:opacity .6s}
+#ilerleme i{flex:1;position:relative;background:rgba(255,255,255,.09);border-radius:0 0 4px 4px;overflow:hidden}
+#ilerleme i::before{content:"";position:absolute;left:0;top:0;bottom:0;width:calc(var(--p,0) * 100%);background:var(--grad);transition:width .7s var(--ease)}
+#stage[data-mode=cover] #ilerleme{opacity:0}
+/* YOL HARİTASI */
+.s-harita .kick{position:absolute;left:160px;top:212px}
+.s-harita h2{position:absolute;left:160px;top:262px;font-size:88px;line-height:1.04;font-weight:800;letter-spacing:-.035em}
+.s-harita .harita{position:absolute;left:160px;right:160px;top:480px;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.s-harita .hk{padding:46px 46px 50px;border-radius:28px;background:var(--kart);box-shadow:inset 0 0 0 1px var(--cizgi);text-align:left}
+.s-harita .hk b{display:block;font-size:76px;line-height:1;font-weight:800;letter-spacing:-.04em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.s-harita .hk h3{margin-top:28px;font-size:44px;line-height:1.12;font-weight:800;letter-spacing:-.02em;min-height:100px}
+.s-harita .hk p{margin-top:20px;font-size:27px;line-height:1.35;color:var(--ink2)}
+/* BÖLÜM KAPAĞI */
+.bkapak .bk-no{position:absolute;left:150px;top:170px;font-size:320px;line-height:1;font-weight:800;letter-spacing:-.06em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bkapak .bk-metin{position:absolute;left:160px;top:560px;max-width:1560px;text-align:left}
+.bkapak .bk-metin h1{margin-top:24px;font-size:112px;line-height:1.02;font-weight:800;letter-spacing:-.04em}
+.bkapak .bk-metin p{margin-top:34px;font-size:38px;line-height:1.35;color:var(--ink2);max-width:1400px}
+.bkapak .bk-harita{position:absolute;left:160px;right:160px;bottom:96px;display:flex;gap:40px;font-size:21px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.bkapak .bk-harita span{flex:1;padding-top:18px;border-top:3px solid var(--cizgi)}
+.bkapak .bk-harita .ge{color:var(--ink3);border-top-color:rgba(255,199,44,.35)}
+.bkapak .bk-harita .su{color:var(--sari);border-top-color:var(--sari)}
 
 /* Geçişler */
 .slide{position:absolute;inset:0;visibility:hidden;opacity:0;transition:opacity .8s var(--ease),visibility 0s .8s}
@@ -233,9 +256,10 @@ h2{font-size:84px;line-height:1.03;font-weight:700;letter-spacing:-.028em;color:
 .galeri .bilgi h3{margin-top:8px;font-size:50px;font-weight:800;letter-spacing:-.02em}
 .galeri .bilgi p{margin-top:8px;font-size:29px;line-height:1.3;color:var(--ink2)}
 .galeri .bilgi .ornek{margin-top:10px;font-size:23px;color:var(--ink3)}
-.gal-buyuk{position:absolute;inset:0;z-index:60;display:none;place-items:center;background:rgba(12,12,16,.94);cursor:pointer}
-.gal-buyuk.acik{display:grid}
-.gal-buyuk video{width:1536px;height:864px;border-radius:24px;background:#000;box-shadow:0 40px 90px rgba(0,0,0,.6);pointer-events:none}
+/* Büyük görünüm: perde yumuşak kararır, video öndeki ekranın yerinden çıkıp süzülerek büyür (FLIP, adimUygula) */
+.gal-buyuk{position:absolute;inset:0;z-index:60;display:grid;place-items:center;background:rgba(12,12,16,.94);cursor:pointer;opacity:0;visibility:hidden;transition:opacity .9s var(--ease),visibility 0s 1.15s}  /* kapanışta perde, video yerine küçülene kadar kalır */
+.gal-buyuk.acik{opacity:1;visibility:visible;transition:opacity .8s var(--ease)}
+.gal-buyuk video{width:1536px;height:864px;border-radius:24px;background:#000;box-shadow:0 40px 90px rgba(0,0,0,.6);pointer-events:none;transform-origin:0 0;transition:transform 1.1s cubic-bezier(.5,0,.15,1),border-radius 1.1s cubic-bezier(.5,0,.15,1)}
 .final .galeri .cyl{animation:none}
 
 /* ÜÇ SORU */
@@ -277,11 +301,11 @@ h2{font-size:84px;line-height:1.03;font-weight:700;letter-spacing:-.028em;color:
 /* OMURGA */
 .omurga2{position:absolute;left:160px;right:160px;top:400px;display:grid;grid-template-columns:repeat(3,1fr);gap:36px}
 .omurga2 .hat{position:absolute;left:14%;right:14%;top:36px;height:6px;border-radius:3px;background:var(--grad);opacity:.55}
-.omurga2 .durak{position:relative;text-align:center}
+.omurga2 .durak{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center}  /* üç durağın kutuları aynı hizada ve aynı boyda */
 .omurga2 .durak i{position:relative;z-index:1;display:grid;place-items:center;width:78px;height:78px;margin:0 auto;border-radius:50%;background:var(--grad);color:#1A1200;font-style:normal;font-size:38px;font-weight:800;box-shadow:0 0 0 10px #1A1A1F}
 .omurga2 h3{margin-top:18px;font-size:46px;font-weight:800;letter-spacing:-.02em}
-.omurga2 p{margin-top:8px;font-size:27px;line-height:1.3;color:var(--ink2)}
-.omurga2 q{display:block;margin:22px auto 0;max-width:470px;padding:18px 22px;border-radius:18px;background:var(--kart);box-shadow:inset 0 0 0 1px var(--cizgi);font-size:26px;line-height:1.3;color:var(--ink);quotes:none}
+.omurga2 p{margin-top:8px;font-size:27px;line-height:1.3;color:var(--ink2);min-height:70px}
+.omurga2 q{display:block;margin:22px auto 0;width:100%;max-width:470px;min-height:130px;box-sizing:border-box;padding:18px 22px;border-radius:18px;background:var(--kart);box-shadow:inset 0 0 0 1px var(--cizgi);font-size:26px;line-height:1.3;color:var(--ink);quotes:none}
 .omurga2 q::before{content:"EL YIKAMA VİDEOSUNDA";display:block;font-size:17px;font-weight:700;letter-spacing:.14em;color:var(--sari);margin-bottom:6px}
 .omurga-tur{position:absolute;left:160px;right:160px;top:845px;display:grid;grid-template-columns:repeat(3,1fr);gap:36px}
 .omurga-tur div{font-size:24px;color:var(--ink2);padding-top:14px;border-top:1px solid var(--cizgi)}
@@ -526,6 +550,7 @@ body.black #blackout{opacity:1}
   <div id="isik"><i class="a"></i><i class="b"></i></div>
   <div id="bant"><span data-logo="oe"></span><span class="ayrac"></span><span data-logo="yg"></span></div>
   <div id="bolum"></div>
+  <div id="ilerleme"><i></i><i></i><i></i></div>
 
   <!-- 1 · KAPAK -->
   <section class="slide cover" data-mode="cover">
@@ -559,6 +584,28 @@ body.black #blackout{opacity:1}
   <section class="slide soz s-ana" data-mode="content" data-bolum="Açılış">
     <div class="kick" data-a="up" style="--d:.15s">Bugünün tek cümlesi</div>
     <h1 data-a="blur" style="--d:.35s">Biz sizi, yalnızca <span class="g">senaryonuz kadar</span> tanırız.</h1>
+  </section>
+
+  <!-- 3b · YOL HARİTASI: üç bölüm -->
+  <section class="slide s-harita" data-mode="content" data-bolum="Açılış">
+    <div class="kick" data-a="up" style="--d:.15s">Bugünün yolu</div>
+    <h2 data-a="up" style="--d:.3s">Üç bölüm, <span class="g">üç soru</span></h2>
+    <div class="harita">
+      <div class="hk" data-a="up" style="--d:.55s"><b>01</b><h3>Neden bu içerik türü?</h3><p>Tür bir zevk tercihi değil, bir gerekçedir.</p></div>
+      <div class="hk" data-a="up" style="--d:.75s"><b>02</b><h3>Senaryo neden eksiksiz olmalı?</h3><p>Senaryoda yazmayan her şey, bizim tahminimizdir.</p></div>
+      <div class="hk" data-a="up" style="--d:.95s"><b>03</b><h3>Senaryo nasıl yazılır?</h3><p>Öğretmen gibi isteyin, senarist gibi düşünün.</p></div>
+    </div>
+  </section>
+
+  <!-- 3c · BÖLÜM 1 KAPAĞI -->
+  <section class="slide bkapak s-b1" data-mode="bolum" data-bolum="Neden bu içerik türü?">
+    <div class="bk-no" data-a="up" style="--d:.1s">01</div>
+    <div class="bk-metin">
+      <div class="kick" data-a="up" style="--d:.3s">Birinci bölüm</div>
+      <h1 data-a="blur" style="--d:.45s">Neden bu <span class="g">içerik türü?</span></h1>
+      <p data-a="up" style="--d:.7s">Aynı konu, iki kitle, iki ayrı ihtiyaç: tür, kitleye ve öğrenme çıktısına göre seçilir.</p>
+    </div>
+    <div class="bk-harita" data-a="up" style="--d:.9s"><span class="su">01 · Neden bu içerik türü?</span><span>02 · Senaryo neden eksiksiz olmalı?</span><span>03 · Senaryo nasıl yazılır?</span></div>
   </section>
 
   <!-- 4 · 72 -->
@@ -651,6 +698,17 @@ body.black #blackout{opacity:1}
   </section>
 
   <!-- 11 · FİRMA -->
+  <!-- 10c · BÖLÜM 2 KAPAĞI -->
+  <section class="slide bkapak s-b2" data-mode="bolum" data-bolum="Senaryo neden eksiksiz olmalı?">
+    <div class="bk-no" data-a="up" style="--d:.1s">02</div>
+    <div class="bk-metin">
+      <div class="kick" data-a="up" style="--d:.3s">İkinci bölüm</div>
+      <h1 data-a="blur" style="--d:.45s">Senaryo neden <span class="g">eksiksiz</span> olmalı?</h1>
+      <p data-a="up" style="--d:.7s">Bu içerikleri biz üreteceğiz; sizi yalnızca senaryonuz kadar tanıyoruz.</p>
+    </div>
+    <div class="bk-harita" data-a="up" style="--d:.9s"><span class="ge">01 · Neden bu içerik türü?</span><span class="su">02 · Senaryo neden eksiksiz olmalı?</span><span>03 · Senaryo nasıl yazılır?</span></div>
+  </section>
+
   <section class="slide soz s-firma" data-mode="content" data-bolum="Senaryo neden eksiksiz olmalı?">
     <div class="kick" data-a="up" style="--d:.15s">Bilmemiz gereken gerçek</div>
     <h1 data-a="blur" style="--d:.35s">Bu içerikleri <span class="g">biz</span> üreteceğiz.</h1>
@@ -708,6 +766,17 @@ body.black #blackout{opacity:1}
   </section>
 
   <!-- 16b · MOTTO -->
+  <!-- 16b · BÖLÜM 3 KAPAĞI -->
+  <section class="slide bkapak s-b3" data-mode="bolum" data-bolum="Senaryo nasıl yazılır?">
+    <div class="bk-no" data-a="up" style="--d:.1s">03</div>
+    <div class="bk-metin">
+      <div class="kick" data-a="up" style="--d:.3s">Üçüncü bölüm</div>
+      <h1 data-a="blur" style="--d:.45s">Senaryo <span class="g">nasıl</span> yazılır?</h1>
+      <p data-a="up" style="--d:.7s">Önce içerik: ne anlatılacak. Sonra teknik: ne görünecek, ne duyulacak, kaç saniye sürecek.</p>
+    </div>
+    <div class="bk-harita" data-a="up" style="--d:.9s"><span class="ge">01 · Neden bu içerik türü?</span><span class="ge">02 · Senaryo neden eksiksiz olmalı?</span><span class="su">03 · Senaryo nasıl yazılır?</span></div>
+  </section>
+
   <section class="slide soz s-motto" data-mode="content" data-bolum="Senaryo nasıl yazılır?">
     <div class="kick" data-a="up" style="--d:.15s">Kalemi alırken</div>
     <h1 data-a="blur" style="--d:.35s">Öğretmen gibi isteyin,<br><span class="g">senarist gibi düşünün.</span></h1>
@@ -1037,6 +1106,11 @@ body.black #blackout{opacity:1}
   const slides = [...document.querySelectorAll('.slide')];
   const progress = document.getElementById('progress');
   const bolum = document.getElementById('bolum');
+  // Üç bölüm: data-bolum etiketi bu adlarla başlayan slaytlar o bölümdedir (alt başlıklar " · İçerik" gibi devam eder)
+  const BOLUMLER = ['Neden bu içerik türü?', 'Senaryo neden eksiksiz olmalı?', 'Senaryo nasıl yazılır?'];
+  const bolumNo = (s) => BOLUMLER.findIndex(b => (s.dataset.bolum || '').startsWith(b)) + 1;
+  const ilerleme = [...document.querySelectorAll('#ilerleme i')];
+  const bolumSlaytlari = BOLUMLER.map((_, j) => slides.map((s, i) => bolumNo(s) === j + 1 ? i : -1).filter(i => i >= 0));
   let cur = -1, adim = 0, digits = '';
   const q = new URLSearchParams(location.search);
   const sunucu = false, onizleme = q.has('onizleme');
@@ -1080,14 +1154,36 @@ body.black #blackout{opacity:1}
     if (gal) {
       // Döngü: çift adımda k. ekran önde (sessiz), tek adımda aynı ekran büyük ve sesli; sonraki → kapatıp bir sonrakini öne getirir
       const ring = gal.querySelector('.ring'), eks = [...ring.children], n = eks.length, k = Math.min(Math.floor(a / 2), n - 1);
-      ring.style.transform = 'translateZ(-820px) rotateY(' + (-k * 360 / n) + 'deg)';
       const aktif = s.classList.contains('active') && !final, buyuk = aktif && a % 2 === 1;
       const b = s.querySelector('.gal-buyuk'), bv = b.querySelector('video'), e = eks[k];
+      // Büyük videoyu kaynak ekranın yerine ve boyutuna taşıyan dönüşüm (ekran rect'leri sahne ölçeğine bölünür)
+      const ucus = (kaynak) => {
+        const r1 = kaynak.getBoundingClientRect(), r2 = bv.getBoundingClientRect(), o = stage.getBoundingClientRect().width / 1920;
+        return `translate(${(r1.left - r2.left) / o}px, ${(r1.top - r2.top) / o}px) scale(${r1.width / r2.width}, ${r1.height / r2.height})`;
+      };
+      let kapaniyor = false;
       if (buyuk) {
         const src = e.querySelector('video').getAttribute('src');
-        if (!b.classList.contains('acik') || bv.getAttribute('src') !== src) { bv.src = src; bv.currentTime = 0; }
-        sesAyarla(bv); b.classList.add('acik'); if (bv.paused) bv.play().catch(() => {});
-      } else if (b.classList.contains('acik')) { bv.pause(); bv.removeAttribute('src'); bv.load(); b.classList.remove('acik'); }
+        if (!b.classList.contains('acik') || bv.getAttribute('src') !== src) {
+          clearTimeout(b._t);
+          bv.src = src; bv.currentTime = 0; b.classList.add('acik'); b._kaynak = e;
+          // FLIP: önce ekranın yerinde başla, bir sonraki karede son yerine süzülerek büyü
+          bv.style.transition = 'none'; bv.style.transform = 'none';
+          bv.style.transform = ucus(e); bv.style.borderRadius = '22px';
+          void bv.offsetWidth;
+          bv.style.transition = ''; bv.style.transform = ''; bv.style.borderRadius = '';
+        }
+        sesAyarla(bv); if (bv.paused) bv.play().catch(() => {});
+      } else if (b.classList.contains('acik')) {
+        // Kapanış: video geldiği ekrana küçülerek döner, perde açılır; halka biraz gecikerek döner
+        kapaniyor = true;
+        if (b._kaynak) { bv.style.transform = ucus(b._kaynak); bv.style.borderRadius = '22px'; }
+        b.classList.remove('acik');
+        clearTimeout(b._t);
+        b._t = setTimeout(() => { if (b.classList.contains('acik')) return; bv.pause(); bv.removeAttribute('src'); bv.load(); bv.style.transform = ''; bv.style.borderRadius = ''; }, 1200);
+      }
+      ring.style.transitionDelay = kapaniyor ? '.5s' : '0s';
+      ring.style.transform = 'translateZ(-820px) rotateY(' + (-k * 360 / n) + 'deg)';
       eks.forEach((e, j) => {
         const on = j === k; e.classList.toggle('front', on);
         const v = e.querySelector('video');
@@ -1119,7 +1215,14 @@ body.black #blackout{opacity:1}
     cur = n; adim = a || 0;
     const s = slides[cur];
     stage.dataset.mode = s.dataset.mode;
-    bolum.textContent = s.dataset.bolum || '';
+    { // Köşe etiketi "01 · …" ve üstteki üç parçalı ilerleme çizgisi
+      const et = s.dataset.bolum || '', bn = bolumNo(s);
+      bolum.innerHTML = bn ? `<b>0${bn}</b>&nbsp;·&nbsp;${et}` : et;
+      ilerleme.forEach((i, j) => {
+        const grup = bolumSlaytlari[j], p = j + 1 < bn || (bn === 0 && n > grup[grup.length - 1]) ? 1 : j + 1 === bn ? (grup.indexOf(n) + 1) / grup.length : 0;
+        i.style.setProperty('--p', p);
+      });
+    }
     void s.offsetWidth;
     s.classList.add('active');
     adimUygula(s);
