@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <title>Fikirden Senaryoya · Mersin Çalıştayı</title>
 <style>
 @font-face{font-family:"Kurum";font-style:normal;font-weight:200 900;font-display:block;
@@ -23,7 +23,7 @@
   --ease:cubic-bezier(.16,.84,.24,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;background:#000;overflow:hidden}
+html,body{width:100%;height:100%;background:#000;overflow:hidden;touch-action:manipulation}
 body{font-family:"Kurum",system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
 body.idle{cursor:none}
 #stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;background:var(--zemin)}
@@ -435,6 +435,7 @@ h2{font-size:84px;line-height:1.03;font-weight:700;letter-spacing:-.028em;color:
 body.black #blackout{opacity:1}
 #hint{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);padding:12px 22px;border-radius:30px;background:rgba(30,30,30,.86);color:#eee;font:500 14px/1 "Kurum",sans-serif;z-index:60;transition:opacity .8s;white-space:nowrap}
 #hint.hide{opacity:0;pointer-events:none}
+@media (hover:none) and (pointer:coarse){#hint{display:none}}  /* telefon/tablet: klavye ipucu yok */
 #hint kbd{display:inline-block;padding:3px 7px;margin:0 3px;border-radius:5px;background:rgba(255,255,255,.16);font:600 12px/1 inherit}
 .final .slide,.final .slide *,.final #bant,.final #stage{transition:none !important}
 .final #hint{display:none}
@@ -1043,7 +1044,8 @@ body.black #blackout{opacity:1}
   if (sunucu) { document.documentElement.classList.add('sunucu'); document.getElementById('pvStage').append(stage); }
 
   const fit = () => {
-    const box = sunucu ? stage.parentNode.getBoundingClientRect() : { width: innerWidth, height: innerHeight };
+    // innerWidth/innerHeight mobil tarayıcıda sayfa küçültülünce şişer (iPhone'da sahne kırpık çıkıyordu); clientWidth gerçek görünümü verir
+    const box = sunucu ? stage.parentNode.getBoundingClientRect() : { width: document.documentElement.clientWidth, height: document.documentElement.clientHeight };
     const s = Math.min(box.width / 1920, box.height / 1080);
     stage.style.transform = `scale(${s}) translate(-50%,-50%)`;
   };
@@ -1278,6 +1280,17 @@ body.black #blackout{opacity:1}
   const onStage = (e) => (!sunucu || !!e.target.closest('#pvStage')) && !e.target.closest('iframe, a, video');
   addEventListener('click', (e) => { if (e.button === 0 && onStage(e)) next(); });
   addEventListener('contextmenu', (e) => { if (!onStage(e)) return; e.preventDefault(); prev(); });
+  // Dokunmatik: iOS Safari window'daki click'i dokunuşa çevirmez (ilk slaytta kalıyordu); dokunuş = ileri, sağa kaydırma = geri, sola kaydırma = ileri
+  let tx = null, ty = 0, tt = 0;
+  addEventListener('touchstart', (e) => { if (e.touches.length !== 1) { tx = null; return; } tx = e.touches[0].clientX; ty = e.touches[0].clientY; tt = Date.now(); }, { passive: true });
+  addEventListener('touchend', (e) => {
+    if (tx === null || !onStage(e) || e.target.closest('.pv-btn,.pv-notes')) { tx = null; return; }
+    const t = e.changedTouches[0], dx = t.clientX - tx, dy = t.clientY - ty; tx = null;
+    const ekran = e.target.closest('.galeri .ekran.front');
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { e.preventDefault(); dx > 0 ? prev() : next(); }
+    else if (Math.abs(dx) < 12 && Math.abs(dy) < 12 && Date.now() - tt < 600) { e.preventDefault(); if (!(ekran && galAc(ekran))) next(); }
+    if (navigator.wakeLock) navigator.wakeLock.request('screen').catch(() => {});
+  }, { passive: false });
 
   const hint = document.getElementById('hint');
   let idleT;
