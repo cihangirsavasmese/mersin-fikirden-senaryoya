@@ -458,7 +458,7 @@ h2{font-size:84px;line-height:1.03;font-weight:700;letter-spacing:-.028em;color:
 .thanks .qr .kutu svg,.thanks .qr .kutu img{width:100%;height:100%}
 .thanks .qr .kutu .yok{color:#888;font-size:26px;font-weight:700}
 .thanks .qr p{margin-top:24px;font-size:28px;font-weight:700;color:var(--sari)}
-.thanks .qr small{display:block;margin-top:6px;font-size:22px;color:var(--ink3);word-break:break-all}
+.thanks .qr small{display:block;margin-top:6px;font-size:22px;color:var(--ink3);word-break:normal;overflow-wrap:anywhere}
 
 /* Karartma, ipucu */
 #blackout{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .6s;z-index:50}
@@ -1106,7 +1106,7 @@ body.black #blackout{opacity:1}
   };
   const QR_URL = 'https://cihangirsavasmese.github.io/mersin-fikirden-senaryoya/';       // sunumun bağlantısı; QR üretildiğinde #qr içine SVG konur
   document.querySelectorAll('[data-logo]').forEach(el => el.replaceWith(document.getElementById('logo-' + el.dataset.logo).content.cloneNode(true)));
-  if (QR_URL) document.getElementById('qrUrl').textContent = QR_URL;
+  if (QR_URL) document.getElementById('qrUrl').innerHTML = QR_URL.replace(/\//g, '/<wbr>'); // satır yalnızca / sonrasında kırılsın
   const stage = document.getElementById('stage');
   const slides = [...document.querySelectorAll('.slide')];
   const progress = document.getElementById('progress');
